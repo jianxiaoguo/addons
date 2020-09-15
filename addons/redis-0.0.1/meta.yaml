@@ -1,0 +1,13 @@
+name: redis
+version: 0.0.1
+id: e1fd0d37-9046-4152-a29b-d155c5657c8b
+description: "redis."
+displayName: "redis"
+
+tags: redis
+labels:
+  experimental: "true"
+providerDisplayName: bitnami
+longDescription: "This is redis addon just to show how to expose services using Kyma helm-broker"
+documentationURL: https://github.com/bitnami/bitnami-docker-redis
+supportURL: http://redis.io/

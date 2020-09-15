@@ -1,0 +1,13 @@
+name: rabbitmq
+version: 0.0.1
+id: 6530fae8-fb86-450b-8ab3-3ca5fb6c77d0
+description: "rabbitmq."
+displayName: "rabbitmq"
+
+tags: mq
+labels:
+  experimental: "true"
+providerDisplayName: rabbitmq
+longDescription: "This is rabbitmq addon just to show how to expose services using Kyma helm-broker"
+documentationURL: https://github.com/bitnami/bitnami-docker-rabbitmq
+supportURL: https://www.rabbitmq.com

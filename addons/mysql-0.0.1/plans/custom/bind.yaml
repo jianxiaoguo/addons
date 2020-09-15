@@ -1,0 +1,19 @@
+credential:
+  - name: HOST
+    value: {{ template "mysql.master.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  - name: PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "mysql.master.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+  {{- if .Values.db.password }}
+  - name: MYSQLPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "mysql.master.fullname" . }}
+        key: mysql-password
+  {{- end }}
+  {{- if .Values.db.user }}
+  - name: USER
+    value: {{ .Values.db.user | quote }}
+  {{- end }}

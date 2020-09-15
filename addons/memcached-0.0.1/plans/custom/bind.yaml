@@ -1,0 +1,8 @@
+credential:
+  - name: HOST
+    value: {{ template "memcached.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  - name: PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "memcached.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="memcache")].port }'

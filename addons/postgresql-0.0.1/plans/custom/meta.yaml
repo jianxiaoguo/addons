@@ -1,0 +1,5 @@
+name: custom
+id: 65f019ed-5287-4c1e-9980-906e9f59914b
+description: "postgresql custom plan which uses the temp persistence."
+displayName: custom
+bindable: true

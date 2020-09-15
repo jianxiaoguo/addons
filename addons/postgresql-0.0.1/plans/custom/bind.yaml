@@ -1,0 +1,22 @@
+credential:
+  - name: HOST
+    value: {{ template "postgresql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+  - name: PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "postgresql.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="postgresql")].port }'
+  - name: PASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "redis.fullname" . }}
+  {{- if and .Values.postgresqlPostgresPassword (not (eq .Values.postgresqlUsername "postgres")) }}
+        key: postgresql-postgres-password
+  {{- end }}
+        key: postgresql-password
+  {{- if .Values.replication.enabled }}
+        key: postgresql-replication-password
+  {{- end }}
+  {{- if (and .Values.ldap.enabled .Values.ldap.bind_password)}}
+        key: postgresql-ldap-password
+  {{- end }}

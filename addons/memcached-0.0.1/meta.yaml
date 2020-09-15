@@ -1,0 +1,15 @@
+name: memcached
+version: 0.0.1
+id: 661503b0-005b-4889-9f92-0bb5932701a4
+description: "Experimental Memcached by Helm Broker."
+displayName: "Experimental Memcached"
+
+tags: database, cache, experimental
+labels:
+  experimental: "true"
+providerDisplayName: Memcached
+longDescription: "Experimental Memcached by Helm Broker. This is an example add-on. It is not recommended for production scenarios. Memcached is an advanced key-value cache and store."
+documentationURL: https://github.com/bitnami/bitnami-docker-memcached
+supportURL: https://bitnami.com/support
+bindable: true
+bindingsRetrievable: true

@@ -1,0 +1,15 @@
+name: grafana
+version: 0.0.1
+id: 8c13d057-7545-46f4-8f0f-166dd35eed8c
+description: "Example Grafana addon"
+displayName: "Grafana"
+
+tags: monitoring
+labels:
+  experimental: "true"
+providerDisplayName: grafana
+longDescription: "This is grafana addon just to show how to expose services using Kyma helm-broker"
+documentationURL: https://grafana.com/docs/
+supportURL: https://grafana.com/community/
+imageURL: https://user-images.githubusercontent.com/10999/43383564-afa9ea6c-93db-11e8-855b-de8be4f79756.png
+bindable: true

@@ -1,0 +1,5 @@
+name: custom
+id: bb6ea106-cc52-4ae7-a7b8-b386125ab87b
+description: "Redis custom plan which uses the in-memory persistence. single node"
+displayName: custom
+bindable: true

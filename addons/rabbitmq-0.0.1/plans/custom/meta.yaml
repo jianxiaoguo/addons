@@ -1,0 +1,4 @@
+name: custom
+id: 75c56aa6-7720-4c0b-bc96-8e49f5fc5757
+description: "mq custom plan which uses the in-memory persistence."
+displayName: custom

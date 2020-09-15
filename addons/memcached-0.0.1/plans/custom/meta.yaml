@@ -1,0 +1,5 @@
+name: custom
+id: 2ab165ae-c8d4-4c82-a854-3c1e3ff38c36
+description: "Memcached custom plan which which limit resources memory size 128Mi."
+displayName: custom
+bindable: true
