@@ -37,7 +37,7 @@ image:
 
 ## String to fully override mysql.fullname template
 ##
-fullnameOverride: mysql-custom
+fullnameOverride: hb-mysql-custom
 
 ## Cluster domain
 ##

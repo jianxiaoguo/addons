@@ -39,7 +39,7 @@ image:
 
 ## String to fully override postgresql.fullname template
 ##
-fullnameOverride: postgresql-custom
+fullnameOverride: hb-postgresql-custom
 
 ##
 ## Init containers parameters:

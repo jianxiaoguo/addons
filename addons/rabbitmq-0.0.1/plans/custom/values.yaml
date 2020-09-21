@@ -40,7 +40,7 @@ image:
 
 ## String to fully override rabbitmq.fullname template
 ##
-# fullnameOverride:
+fullnameOverride: hb-rabbitmq-custom
 
 ## Kubernetes Cluster Domain
 ##

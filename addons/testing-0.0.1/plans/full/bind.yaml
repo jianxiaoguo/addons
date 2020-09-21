@@ -1,3 +1,0 @@
-credential:
-  - name: CONFIG_MAP_NAME
-    value: {{ template "testing.fullname" . }}

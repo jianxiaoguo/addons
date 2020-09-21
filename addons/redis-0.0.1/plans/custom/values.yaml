@@ -37,7 +37,7 @@ image:
 
 ## String to fully override redis.fullname template
 ##
-fullnameOverride: redis-custom
+fullnameOverride: hb-redis-custom
 
 ## Cluster settings
 cluster:
