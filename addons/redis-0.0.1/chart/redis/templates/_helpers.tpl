@@ -35,7 +35,7 @@ If release name contains chart name it will be used as a full name.
 Return the appropriate apiVersion for networkpolicy.
 */}}
 {{- define "networkPolicy.apiVersion" -}}
-{{- if semverCompare ">=1.4-0, <1.7-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.4-0, <1.7-0" .Capabilities.KubeVersion.Version -}}
 {{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "networking.k8s.io/v1" -}}
@@ -46,7 +46,7 @@ Return the appropriate apiVersion for networkpolicy.
 Return the appropriate apiGroup for PodSecurityPolicy.
 */}}
 {{- define "podSecurityPolicy.apiGroup" -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.Version -}}
 {{- print "policy" -}}
 {{- else -}}
 {{- print "extensions" -}}
@@ -57,7 +57,7 @@ Return the appropriate apiGroup for PodSecurityPolicy.
 Return the appropriate apiVersion for PodSecurityPolicy.
 */}}
 {{- define "podSecurityPolicy.apiVersion" -}}
-{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
+{{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.Version -}}
 {{- print "policy/v1beta1" -}}
 {{- else -}}
 {{- print "extensions/v1beta1" -}}
@@ -400,7 +400,7 @@ Compile all warnings into a single message, and call fail.
 
 {{/* Validate values of Redis - spreadConstrainsts K8s version */}}
 {{- define "redis.validateValues.spreadConstraints" -}}
-{{- if and (semverCompare "<1.16-0" .Capabilities.KubeVersion.GitVersion) .Values.slave.spreadConstraints -}}
+{{- if and (semverCompare "<1.16-0" .Capabilities.KubeVersion.Version) .Values.slave.spreadConstraints -}}
 redis: spreadConstraints
     Pod Topology Spread Constraints are only available on K8s  >= 1.16
     Find more information at https://kubernetes.io/docs/concepts/workloads/pods/pod-topology-spread-constraints/
