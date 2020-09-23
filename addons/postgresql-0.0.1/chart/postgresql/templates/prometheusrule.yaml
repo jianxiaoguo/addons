@@ -7,7 +7,10 @@ metadata:
   namespace: {{ . }}
 {{- end }}
   labels:
-  {{- include "common.labels.standard" . | nindent 4 }}
+    app: {{ template "postgresql.name" . }}
+    chart: {{ template "postgresql.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
   {{- with .Values.metrics.prometheusRule.additionalLabels }}
   {{- toYaml . | nindent 4 }}
   {{- end }}

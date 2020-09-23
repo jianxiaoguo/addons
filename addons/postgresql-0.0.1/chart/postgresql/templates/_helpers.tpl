@@ -40,9 +40,9 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 Return the appropriate apiVersion for networkpolicy.
 */}}
 {{- define "postgresql.networkPolicy.apiVersion" -}}
-{{- if semverCompare ">=1.4-0, <1.7-0" .Capabilities.KubeVersion.Version -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare ">=1.4-0, <1.7-0" -}}
 "extensions/v1beta1"
-{{- else if semverCompare "^1.7-0" .Capabilities.KubeVersion.Version -}}
+{{- else if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "^1.7-0" -}}
 "networking.k8s.io/v1"
 {{- end -}}
 {{- end -}}
@@ -221,19 +221,12 @@ Get the password secret.
 {{- end -}}
 
 {{/*
-Return true if we should use an existingSecret.
-*/}}
-{{- define "postgresql.useExistingSecret" -}}
-{{- if or .Values.global.postgresql.existingSecret .Values.existingSecret -}}
-    {{- true -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
 Return true if a secret object should be created
 */}}
 {{- define "postgresql.createSecret" -}}
-{{- if not (include "postgresql.useExistingSecret" .) -}}
+{{- if .Values.global.postgresql.existingSecret }}
+{{- else if .Values.existingSecret -}}
+{{- else -}}
     {{- true -}}
 {{- end -}}
 {{- end -}}
@@ -341,9 +334,9 @@ Get the readiness probe command
 {{- define "postgresql.readinessProbeCommand" -}}
 - |
 {{- if (include "postgresql.database" .) }}
-  exec pg_isready -U {{ include "postgresql.username" . | quote }} -d "dbname={{ include "postgresql.database" . }} {{- if and .Values.tls.enabled .Values.tls.certCAFilename }} sslcert={{ include "postgresql.tlsCert" . }} sslkey={{ include "postgresql.tlsCertKey" . }}{{- end }}" -h 127.0.0.1 -p {{ template "postgresql.port" . }}
+  exec pg_isready -U {{ include "postgresql.username" . | quote }} -d {{ (include "postgresql.database" .) | quote }} -h 127.0.0.1 -p {{ template "postgresql.port" . }}
 {{- else }}
-  exec pg_isready -U {{ include "postgresql.username" . | quote }} {{- if and .Values.tls.enabled .Values.tls.certCAFilename }} -d "sslcert={{ include "postgresql.tlsCert" . }} sslkey={{ include "postgresql.tlsCertKey" . }}"{{- end }} -h 127.0.0.1 -p {{ template "postgresql.port" . }}
+  exec pg_isready -U {{ include "postgresql.username" . | quote }} -h 127.0.0.1 -p {{ template "postgresql.port" . }}
 {{- end }}
 {{- if contains "bitnami/" .Values.image.repository }}
   [ -f /opt/bitnami/postgresql/tmp/.initialized ] || [ -f /bitnami/postgresql/.initialized ]
@@ -402,7 +395,7 @@ Usage:
 Return the appropriate apiVersion for statefulset.
 */}}
 {{- define "postgresql.statefulset.apiVersion" -}}
-{{- if semverCompare "<1.14-0" .Capabilities.KubeVersion.Version -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "<1.14-0" -}}
 {{- print "apps/v1beta2" -}}
 {{- else -}}
 {{- print "apps/v1" -}}
@@ -416,7 +409,6 @@ Compile all warnings into a single message, and call fail.
 {{- $messages := list -}}
 {{- $messages := append $messages (include "postgresql.validateValues.ldapConfigurationMethod" .) -}}
 {{- $messages := append $messages (include "postgresql.validateValues.psp" .) -}}
-{{- $messages := append $messages (include "postgresql.validateValues.tls" .) -}}
 {{- $messages := without $messages "" -}}
 {{- $message := join "\n" $messages -}}
 
@@ -452,50 +444,9 @@ postgresql: psp.create, rbac.create
 Return the appropriate apiVersion for podsecuritypolicy.
 */}}
 {{- define "podsecuritypolicy.apiVersion" -}}
-{{- if semverCompare "<1.10-0" .Capabilities.KubeVersion.Version -}}
+{{- if default "v1.18.0" .Capabilities.KubeVersion.Version | trimPrefix "v" | semverCompare "<1.10-0" -}}
 {{- print "extensions/v1beta1" -}}
 {{- else -}}
 {{- print "policy/v1beta1" -}}
-{{- end -}}
-{{- end -}}
-
-{{/*
-Validate values of Postgresql TLS - When TLS is enabled, so must be VolumePermissions
-*/}}
-{{- define "postgresql.validateValues.tls" -}}
-{{- if and .Values.tls.enabled (not .Values.volumePermissions.enabled) }}
-postgresql: tls.enabled, volumePermissions.enabled
-    When TLS is enabled you must enable volumePermissions as well to ensure certificates files have
-    the right permissions.
-{{- end -}}
-{{- end -}}
-
-{{/*
-Return the path to the cert file.
-*/}}
-{{- define "postgresql.tlsCert" -}}
-{{- required "Certificate filename is required when TLS in enabled" .Values.tls.certFilename | printf "/opt/bitnami/postgresql/certs/%s" -}}
-{{- end -}}
-
-{{/*
-Return the path to the cert key file.
-*/}}
-{{- define "postgresql.tlsCertKey" -}}
-{{- required "Certificate Key filename is required when TLS in enabled" .Values.tls.certKeyFilename | printf "/opt/bitnami/postgresql/certs/%s" -}}
-{{- end -}}
-
-{{/*
-Return the path to the CA cert file.
-*/}}
-{{- define "postgresql.tlsCACert" -}}
-{{- printf "/opt/bitnami/postgresql/certs/%s" .Values.tls.certCAFilename -}}
-{{- end -}}
-
-{{/*
-Return the path to the CRL file.
-*/}}
-{{- define "postgresql.tlsCRL" -}}
-{{- if .Values.tls.crlFilename -}}
-{{- printf "/opt/bitnami/postgresql/certs/%s" .Values.tls.crlFilename -}}
 {{- end -}}
 {{- end -}}

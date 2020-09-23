@@ -4,7 +4,7 @@
 
 For HA, please see [this repo](https://github.com/bitnami/charts/tree/master/bitnami/postgresql-ha)
 
-## TL;DR
+## TL;DR;
 
 ```console
 $ helm repo add bitnami https://charts.bitnami.com/bitnami
@@ -80,7 +80,6 @@ The following tables lists the configurable parameters of the PostgreSQL chart a
 | `volumePermissions.image.repository`          | Init container volume-permissions image name                                                                                                                              | `bitnami/minideb`                                             |
 | `volumePermissions.image.tag`                 | Init container volume-permissions image tag                                                                                                                               | `buster`                                                      |
 | `volumePermissions.image.pullPolicy`          | Init container volume-permissions image pull policy                                                                                                                       | `Always`                                                      |
-| `volumePermissions.securityContext.*`         | Other container security context to be included as-is in the container spec                                                                                                     | `{}`                                                          |
 | `volumePermissions.securityContext.runAsUser` | User ID for the init container (when facing issues in OpenShift or uid unknown, try value "auto")                                                                         | `0`                                                           |
 | `usePasswordFile`                             | Have the secrets mounted as a file instead of env vars                                                                                                                    | `false`                                                       |
 | `ldap.enabled`                                | Enable LDAP support                                                                                                                                                       | `false`                                                       |
@@ -157,9 +156,6 @@ The following tables lists the configurable parameters of the PostgreSQL chart a
 | `master.service.type`                         | Allows using a different service type for Master                                                                                                                          | `nil`                                                         |
 | `master.service.nodePort`                     | Allows using a different nodePort for Master                                                                                                                              | `nil`                                                         |
 | `master.service.clusterIP`                    | Allows using a different clusterIP for Master                                                                                                                             | `nil`                                                         |
-| `masterAsStandBy.enabled`                     | Whether to enable current cluster's Master as standby server of another cluster or not.                                                                                   | `false`                                                       |
-| `masterAsStandBy.masterHost`                  | The Host of replication Master in the other cluster.                                                                                                                      | `nil`                                                         |
-| `masterAsStandBy.masterPort `                 | The Port of replication Master in the other cluster.                                                                                                                      | `nil`                                                         |
 | `slave.nodeSelector`                          | Node labels for pod assignment (postgresql slave)                                                                                                                         | `{}`                                                          |
 | `slave.affinity`                              | Affinity labels for pod assignment (postgresql slave)                                                                                                                     | `{}`                                                          |
 | `slave.tolerations`                           | Toleration labels for pod assignment (postgresql slave)                                                                                                                   | `[]`                                                          |
@@ -175,15 +171,11 @@ The following tables lists the configurable parameters of the PostgreSQL chart a
 | `slave.service.type`                          | Allows using a different service type for Slave                                                                                                                           | `nil`                                                         |
 | `slave.service.nodePort`                      | Allows using a different nodePort for Slave                                                                                                                               | `nil`                                                         |
 | `slave.service.clusterIP`                     | Allows using a different clusterIP for Slave                                                                                                                              | `nil`                                                         |
-| `slave.persistence.enabled`                   | Whether to enable slave replicas persistence                                                                                                                              | `true`                                                        |
 | `terminationGracePeriodSeconds`               | Seconds the pod needs to terminate gracefully                                                                                                                             | `nil`                                                         |
 | `resources`                                   | CPU/Memory resource requests/limits                                                                                                                                       | Memory: `256Mi`, CPU: `250m`                                  |
-| `securityContext.*`                           | Other pod security context to be included as-is in the pod spec                                                                                                           | `{}`                                                          |
 | `securityContext.enabled`                     | Enable security context                                                                                                                                                   | `true`                                                        |
-| `securityContext.fsGroup`                     | Group ID for the pod                                                                                                                                                      | `1001`                                                        |
-| `containerSecurityContext.*`                  | Other container security context to be included as-is in the container spec                                                                                               | `{}`                                                          |
-| `containerSecurityContext.enabled`            | Enable container security context                                                                                                                                         | `true`                                                        |
-| `containerSecurityContext.runAsUser`          | User ID for the container                                                                                                                                                 | `1001`                                                        |
+| `securityContext.fsGroup`                     | Group ID for the container                                                                                                                                                | `1001`                                                        |
+| `securityContext.runAsUser`                   | User ID for the container                                                                                                                                                 | `1001`                                                        |
 | `serviceAccount.enabled`                      | Enable service account (Note: Service Account will only be automatically created if `serviceAccount.name` is not set)                                                     | `false`                                                       |
 | `serviceAccount.name`                         | Name of existing service account                                                                                                                                          | `nil`                                                         |
 | `livenessProbe.enabled`                       | Would you like a livenessProbe to be enabled                                                                                                                              | `true`                                                        |
@@ -201,13 +193,6 @@ The following tables lists the configurable parameters of the PostgreSQL chart a
 | `readinessProbe.timeoutSeconds`               | When the probe times out                                                                                                                                                  | 5                                                             |
 | `readinessProbe.failureThreshold`             | Minimum consecutive failures for the probe to be considered failed after having succeeded.                                                                                | 6                                                             |
 | `readinessProbe.successThreshold`             | Minimum consecutive successes for the probe to be considered successful after having failed                                                                               | 1                                                             |
-| `tls.enabled`                                 | Enable TLS traffic support                                                                                                                                                | `false`                                                       |
-| `tls.preferServerCiphers`                     | Whether to use the server's TLS cipher preferences rather than the client's                                                                                               | `true`                                                        |
-| `tls.certificatesSecret`                      | Name of an existing secret that contains the certificates                                                                                                                 | `nil`                                                         |
-| `tls.certFilename`                            | Certificate filename                                                                                                                                                      | `""`                                                          |
-| `tls.certKeyFilename`                         | Certificate key filename                                                                                                                                                  | `""`                                                          |
-| `tls.certCAFilename`                          | CA Certificate filename. If provided, PostgreSQL will authenticate TLS/SSL clients by requesting them a certificate.                                                      |`nil`                                                          |
-| `tls.crlFilename`                             | File containing a Certificate Revocation List                                                                                                                             |`nil`                                                          |
 | `metrics.enabled`                             | Start a prometheus exporter                                                                                                                                               | `false`                                                       |
 | `metrics.service.type`                        | Kubernetes Service type                                                                                                                                                   | `ClusterIP`                                                   |
 | `service.clusterIP`                           | Static clusterIP or None for headless services                                                                                                                            | `nil`                                                         |
@@ -229,7 +214,6 @@ The following tables lists the configurable parameters of the PostgreSQL chart a
 | `metrics.image.pullSecrets`                   | Specify Image pull secrets                                                                                                                                                | `nil` (does not add image pull secrets to deployed pods)      |
 | `metrics.customMetrics`                       | Additional custom metrics                                                                                                                                                 | `nil`                                                         |
 | `metrics.extraEnvVars`                        | Extra environment variables to add to exporter  | `{}` (evaluated as a template)   |
-| `metrics.securityContext.*`                   | Other container security context to be included as-is in the container spec                                                                                               | `{}`                                                          |
 | `metrics.securityContext.enabled`             | Enable security context for metrics                                                                                                                                       | `false`                                                       |
 | `metrics.securityContext.runAsUser`           | User ID for the container for metrics                                                                                                                                     | `1001`                                                        |
 | `metrics.livenessProbe.initialDelaySeconds`   | Delay before liveness probe is initiated                                                                                                                                  | 30                                                            |
@@ -345,35 +329,6 @@ In addition to these options, you can also set an external ConfigMap with all th
 
 The allowed extensions are `.sh`, `.sql` and `.sql.gz`.
 
-### Securing traffic using TLS
-
-TLS support can be enabled in the chart by specifying the `tls.` parameters while creating a release. The following parameters should be configured to properly enable the TLS support in the chart:
-
-- `tls.enabled`: Enable TLS support. Defaults to `false`
-- `tls.certificatesSecret`: Name of an existing secret that contains the certificates. No defaults.
-- `tls.certFilename`: Certificate filename. No defaults.
-- `tls.certKeyFilename`: Certificate key filename. No defaults.
-
-For example:
-
-* First, create the secret with the cetificates files:
-
-    ```console
-    kubectl create secret generic certificates-tls-secret --from-file=./cert.crt --from-file=./cert.key --from-file=./ca.crt
-    ```
-
-* Then, use the following parameters:
-
-    ```console
-    volumePermissions.enabled=true
-    tls.enabled=true
-    tls.certificatesSecret="certificates-tls-secret"
-    tls.certFilename="cert.crt"
-    tls.certKeyFilename="cert.key"
-    ```
-
-    > Note TLS and VolumePermissions: PostgreSQL requires certain permissions on sensitive files (such as certificate keys) to start up. Due to an on-going [issue](https://github.com/kubernetes/kubernetes/issues/57923) regarding kubernetes permissions and the use of `containerSecurityContext.runAsUser`, you must enable `volumePermissions` to ensure everything works as expected.
-
 ### Sidecars
 
 If you need  additional containers to run within the same pod as PostgreSQL (e.g. an additional metrics or logging exporter), you can do so via the `sidecars` config parameter. Simply define your container according to the Kubernetes container spec.
@@ -475,7 +430,7 @@ This label will be displayed in the output of a successful install.
 
 - The Docker Official PostgreSQL image does not support replication. If you pass any replication environment variable, this would be ignored. The only environment variables supported by the Docker Official image are POSTGRES_USER, POSTGRES_DB, POSTGRES_PASSWORD, POSTGRES_INITDB_ARGS, POSTGRES_INITDB_WALDIR and PGDATA. All the remaining environment variables are specific to the Bitnami PostgreSQL image.
 - The Bitnami PostgreSQL image is non-root by default. This requires that you run the pod with `securityContext` and updates the permissions of the volume with an `initContainer`. A key benefit of this configuration is that the pod follows security best practices and is prepared to run on Kubernetes distributions with hard security constraints like OpenShift.
-- For OpenShift, one may either define the runAsUser and fsGroup accordingly, or try this more dynamic option: volumePermissions.securityContext.runAsUser="auto",securityContext.enabled=false,containerSecurityContext.enabled=false,shmVolume.chmod.enabled=false
+- For OpenShift, one may either define the runAsUser and fsGroup accordingly, or try this more dynamic option: volumePermissions.securityContext.runAsUser="auto",securityContext.enabled=false,shmVolume.chmod.enabled=false
 
 ### Deploy chart using Docker Official PostgreSQL Image
 
@@ -500,60 +455,6 @@ $ helm upgrade my-release stable/postgresql \
 ```
 
 > Note: you need to substitute the placeholders _[POSTGRESQL_PASSWORD]_, and _[REPLICATION_PASSWORD]_ with the values obtained from instructions in the installation notes.
-
-## 9.0.0
-
-In this version the chart was adapted to follow the Helm label best practices, see [PR 3021](https://github.com/bitnami/charts/pull/3021). That means the backward compatibility is not guarantee when upgrading the chart to this major version.
-
-As a workaround, you can delete the existing statefulset (using the `--cascade=false` flag pods are not deleted) before upgrade the chart. For example, this can be a valid workflow:
-
-- Deploy an old version (8.X.X)
-```console
-$ helm install postgresql bitnami/postgresql --version 8.10.14
-```
-
-- Old version is up and running
-```console
-$ helm ls
-NAME      	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART             	APP VERSION
-postgresql	default  	1       	2020-08-04 13:39:54.783480286 +0000 UTC	deployed	postgresql-8.10.14	11.8.0
-
-$ kubectl get pods
-NAME                      READY   STATUS    RESTARTS   AGE
-postgresql-postgresql-0   1/1     Running   0          76s
-```
-
-- The upgrade to the latest one (9.X.X) is going to fail
-```console
-$ helm upgrade postgresql bitnami/postgresql
-Error: UPGRADE FAILED: cannot patch "postgresql-postgresql" with kind StatefulSet: StatefulSet.apps "postgresql-postgresql" is invalid: spec: Forbidden: updates to statefulset spec for fields other than 'replicas', 'template', and 'updateStrategy' are forbidden
-```
-
-- Delete the statefulset
-```console
-$ kubectl delete statefulsets.apps --cascade=false postgresql-postgresql
-statefulset.apps "postgresql-postgresql" deleted
-```
-
-- Now the upgrade works
-```cosnole
-$ helm upgrade postgresql bitnami/postgresql
-$ helm ls
-NAME      	NAMESPACE	REVISION	UPDATED                                	STATUS  	CHART           	APP VERSION
-postgresql	default  	3       	2020-08-04 13:42:08.020385884 +0000 UTC	deployed	postgresql-9.1.2	11.8.0
-```
-
-- We can kill the existing pod and the new statefulset is going to create a new one:
-```console
-$ kubectl delete pod postgresql-postgresql-0
-pod "postgresql-postgresql-0" deleted
-
-$ kubectl get pods
-NAME                      READY   STATUS    RESTARTS   AGE
-postgresql-postgresql-0   1/1     Running   0          19s
-```
-
-Please, note that without the `--cascade=false` both objects (statefulset and pod) are going to be removed and both objects will be deployed again with the `helm upgrade` command
 
 ## 8.0.0
 

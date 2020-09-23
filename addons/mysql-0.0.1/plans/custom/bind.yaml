@@ -1,11 +1,24 @@
 credential:
-  - name: HOST
-    value: {{ template "mysql.master.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
-  - name: PORT
+  - name: MASTERHOST
+    value: {{ template "mysql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+
+  - name: MASTERPORT
     valueFrom:
       serviceRef:
-        name: {{ template "mysql.master.fullname" . }}
+        name: {{ template "mysql.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+
+  {{- if .Values.slave.replicas }}
+  - name: SLAVEHOST
+    value: {{ template "mysql.slave.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+
+  - name: SLAVEPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "mysql.slave.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+  {{- end }}
+
   {{- if .Values.db.password }}
   - name: MYSQLPASSWORD
     valueFrom:

@@ -1,22 +1,33 @@
 credential:
   - name: HOST
-    value: {{ template "postgresql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+    value: {{ template "postgresql.fullname" .}}.{{ .Release.Namespace }}.svc.cluster.local
   - name: PORT
     valueFrom:
       serviceRef:
         name: {{ template "postgresql.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.name=="postgresql")].port }'
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
+
+  {{- if .Values.replication.enabled }}
+  - name: READHOST
+    value: {{ template "postgresql.fullname" . }}-read.{{ .Release.Namespace }}.svc.cluster.local
+  - name: READPORT
+  valueFrom:
+    serviceRef:
+      name: {{ template "postgresql.fullname" . }}-read
+      jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
+  {{- end }}
+
+  - name: USERNAME
+    value: {{ .Values.postgresqlUsername }}
   - name: PASSWORD
     valueFrom:
       secretKeyRef:
-        name: {{ template "redis.fullname" . }}
-  {{- if and .Values.postgresqlPostgresPassword (not (eq .Values.postgresqlUsername "postgres")) }}
-        key: postgresql-postgres-password
-  {{- end }}
+        name: {{ template "postgresql.fullname" . }}
         key: postgresql-password
-  {{- if .Values.replication.enabled }}
-        key: postgresql-replication-password
+
+  {{- if .Values.postgresqlDatabase }}
+  - name: DATABASE
+    value: {{ .Values.postgresqlDatabase }}
   {{- end }}
-  {{- if (and .Values.ldap.enabled .Values.ldap.bind_password)}}
-        key: postgresql-ldap-password
-  {{- end }}
+  - name: SSL_MODE
+    value: disabled

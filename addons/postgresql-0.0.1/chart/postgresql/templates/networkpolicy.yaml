@@ -4,14 +4,18 @@ apiVersion: {{ template "postgresql.networkPolicy.apiVersion" . }}
 metadata:
   name: {{ template "postgresql.fullname" . }}
   labels:
-  {{- include "common.labels.standard" . | nindent 4 }}
+    app: {{ template "postgresql.name" . }}
+    chart: {{ template "postgresql.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
   {{- if .Values.commonAnnotations }}
   annotations: {{- include "postgresql.tplValue" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
   {{- end }}
 spec:
   podSelector:
     matchLabels:
-    {{- include "common.labels.matchLabels" . | nindent 6 }}
+      app: {{ template "postgresql.name" . }}
+      release: {{ .Release.Name | quote }}
   ingress:
     # Allow inbound connections
     - ports:
@@ -27,7 +31,8 @@ spec:
           {{- end }}
         - podSelector:
             matchLabels:
-            {{- include "common.labels.matchLabels" . | nindent 14 }}
+              app: {{ template "postgresql.name" . }}
+              release: {{ .Release.Name | quote }}
               role: slave
       {{- end }}
     # Allow prometheus scrapes

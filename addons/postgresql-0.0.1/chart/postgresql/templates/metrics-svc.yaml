@@ -4,7 +4,10 @@ kind: Service
 metadata:
   name: {{ template "postgresql.fullname" . }}-metrics
   labels:
-  {{- include "common.labels.standard" . | nindent 4 }}
+    app: {{ template "postgresql.name" . }}
+    chart: {{ template "postgresql.chart" . }}
+    release: {{ .Release.Name | quote }}
+    heritage: {{ .Release.Service | quote }}
   annotations:
   {{- if .Values.commonAnnotations }}
     {{- include "postgresql.tplValue" ( dict "value" .Values.commonAnnotations "context" $ ) | nindent 4 }}
@@ -20,6 +23,7 @@ spec:
       port: 9187
       targetPort: http-metrics
   selector:
-  {{- include "common.labels.matchLabels" . | nindent 4 }}
+    app: {{ template "postgresql.name" . }}
+    release: {{ .Release.Name }}
     role: master
 {{- end }}

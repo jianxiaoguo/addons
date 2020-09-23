@@ -15,7 +15,7 @@ global:
 image:
   registry: docker.io
   repository: bitnami/postgresql
-  tag: 11.9.0-debian-10-r16
+  tag: 11.8.0-debian-10-r51
   ## Specify a imagePullPolicy
   ## Defaults to 'Always' if image tag is 'latest', else set to 'IfNotPresent'
   ## ref: http://kubernetes.io/docs/user-guide/images/#pre-pulling-images
@@ -79,18 +79,13 @@ volumePermissions:
 ##
 # schedulerName:
 
+
 ## Pod Security Context
 ## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
 ##
 securityContext:
   enabled: true
   fsGroup: 1001
-
-## Container Security Context
-## ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/
-##
-containerSecurityContext:
-  enabled: true
   runAsUser: 1001
 
 ## Pod Service Account
@@ -117,7 +112,7 @@ replication:
   slaveReplicas: 1
   ## Set synchronous commit mode: on, off, remote_apply, remote_write and local
   ## ref: https://www.postgresql.org/docs/9.6/runtime-config-wal.html#GUC-WAL-LEVEL
-  synchronousCommit: 'off'
+  synchronousCommit: "off"
   ## From the number of `slaveReplicas` defined above, set the number of those that will have synchronous replication
   ## NOTE: It cannot be > slaveReplicas
   numSynchronousReplicas: 0
@@ -191,15 +186,6 @@ extraEnv: []
 ##
 # postgresqlExtendedConf:
 
-## Configure current cluster's master server to be the standby server in other cluster.
-## This will allow cross cluster replication and provide cross cluster high availability.
-## You will need to configure pgHbaConfiguration if you want to enable this feature with local cluster replication enabled.
-##
-masterAsStandBy:
-  enabled: false
-  #  masterHost:
-  #  masterPort:
-
 ## PostgreSQL client authentication configuration
 ## Specify content for pg_hba.conf
 ## Default: do not create pg_hba.conf
@@ -246,17 +232,17 @@ masterAsStandBy:
 ##
 ldap:
   enabled: false
-  url: ''
-  server: ''
-  port: ''
-  prefix: ''
-  suffix: ''
-  baseDN: ''
-  bindDN: ''
+  url: ""
+  server: ""
+  port: ""
+  prefix: ""
+  suffix: ""
+  baseDN: ""
+  bindDN: ""
   bind_password:
-  search_attr: ''
-  search_filter: ''
-  scheme: ''
+  search_attr: ""
+  search_filter: ""
+  scheme: ""
   tls: false
 
 ## PostgreSQL service configuration
@@ -278,6 +264,7 @@ service:
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
   # loadBalancerIP:
+
   ## Load Balancer sources. Evaluated as a template.
   ## https://kubernetes.io/docs/tasks/access-application-cluster/configure-cloud-provider-firewall/#restrict-access-for-loadbalancer-service
   ##
@@ -325,7 +312,7 @@ persistence:
   ## The subdirectory of the volume to mount to, useful in dev environments
   ## and one PV for multiple services.
   ##
-  subPath: ''
+  subPath: ""
 
   # storageClass: "-"
   accessModes:
@@ -354,7 +341,7 @@ master:
   annotations: {}
   podLabels: {}
   podAnnotations: {}
-  priorityClassName: ''
+  priorityClassName: ""
   ## Extra init containers
   ## Example
   ##
@@ -405,7 +392,7 @@ slave:
   annotations: {}
   podLabels: {}
   podAnnotations: {}
-  priorityClassName: ''
+  priorityClassName: ""
   extraInitContainers: |
     # - name: do-something
     #   image: busybox
@@ -434,10 +421,6 @@ slave:
   # type:
   # nodePort:
   # clusterIP:
-  ## Whether to enable PostgreSQL slave replicas data Persistent
-  ##
-  persistence:
-    enabled: true
 
 ## Configure resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
@@ -494,33 +477,6 @@ readinessProbe:
   failureThreshold: 6
   successThreshold: 1
 
-##
-## TLS configuration
-##
-tls:
-  # Enable TLS traffic
-  enabled: false
-  #
-  # Whether to use the server's TLS cipher preferences rather than the client's.
-  preferServerCiphers: true
-  #
-  # Name of the Secret that contains the certificates
-  certificatesSecret: ''
-  #
-  # Certificate filename
-  certFilename: ''
-  #
-  # Certificate Key filename
-  certKeyFilename: ''
-  #
-  # CA Certificate filename
-  # If provided, PostgreSQL will authenticate TLS/SSL clients by requesting them a certificate
-  # ref: https://www.postgresql.org/docs/9.6/auth-methods.html
-  certCAFilename:
-  #
-  # File containing a Certificate Revocation List
-  crlFilename:
-
 ## Configure metrics exporter
 ##
 metrics:
@@ -529,8 +485,8 @@ metrics:
   service:
     type: ClusterIP
     annotations:
-      prometheus.io/scrape: 'true'
-      prometheus.io/port: '9187'
+      prometheus.io/scrape: "true"
+      prometheus.io/port: "9187"
     loadBalancerIP:
   serviceMonitor:
     enabled: false
@@ -544,7 +500,7 @@ metrics:
   prometheusRule:
     enabled: false
     additionalLabels: {}
-    namespace: ''
+    namespace: ""
     ## These are just examples rules, please adapt them to your needs.
     ## Make sure to constraint the rules to the current postgresql service.
     ## rules:
@@ -561,7 +517,7 @@ metrics:
   image:
     registry: docker.io
     repository: bitnami/postgres-exporter
-    tag: 0.8.0-debian-10-r207
+    tag: 0.8.0-debian-10-r157
     pullPolicy: IfNotPresent
     ## Optionally specify an array of imagePullSecrets.
     ## Secrets must be manually created in the namespace.
