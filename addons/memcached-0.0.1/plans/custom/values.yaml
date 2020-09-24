@@ -35,4 +35,30 @@ persistence:
     - ReadWriteOnce
   ## Persistent Volume size
   ##
-  size: 1Gi
+  size: 512Mi
+
+## Memcahed architecture. Allowed values: standalone or high-availability
+##
+architecture: high-availability
+
+## Service parameters
+##
+##
+service:
+  ## Service type
+  ##
+  type: NodePort
+  ## Memcached port
+  ##
+  port: 11211
+  ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  ##
+  nodePort:
+  ## Set the LoadBalancer service type to internal only.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  # loadBalancerIP:
+  ## Annotations for the Memcached service
+  ##
+  annotations: {}

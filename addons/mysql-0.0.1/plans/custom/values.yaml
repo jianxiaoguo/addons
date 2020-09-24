@@ -2,77 +2,9 @@
 ##
 fullnameOverride: hb-mysql-custom
 
-## Admin (root) credentials
-##
-root:
-  ## MySQL admin password
-  ## ref: https://github.com/bitnami/bitnami-docker-mysql#setting-the-root-password-on-first-run
-  ##
-  password:
-  ## Option to force users to specify a password. That is required for 'helm upgrade' to work properly.
-  ## If it is not force, a random password will be generated.
-  ##
-  forcePassword: false
-  ## Mount admin password as a file instead of using an environment variable
-  ##
-  injectSecretsAsVolume: false
-
-## Custom user/db credentials
-##
-db:
-  ## MySQL username and password
-  ## ref: https://github.com/bitnami/bitnami-docker-mysql#creating-a-database-user-on-first-run
-  ## Note that this user should be different from the MySQL replication user (replication.user)
-  ##
-  user:
-  password:
-  ## Database to create
-  ## ref: https://github.com/bitnami/bitnami-docker-mysql#creating-a-database-on-first-run
-  ##
-  name: my_database
-  ## Option to force users to specify a password. That is required for 'helm upgrade' to work properly.
-  ## If it is not force, a random password will be generated.
-  ##
-  forcePassword: false
-  ## Mount replication user password as a file instead of using an environment variable
-  ##
-  injectSecretsAsVolume: false
-
 ## Master nodes parameters
 ##
 master:
-  ## Configure MySQL with a custom my.cnf file
-  ## ref: https://mysql.com/kb/en/mysql/configuring-mysql-with-mycnf/#example-of-configuration-file
-  ##
-  config: |-
-    [mysqld]
-    default_authentication_plugin=mysql_native_password
-    skip-name-resolve
-    explicit_defaults_for_timestamp
-    basedir=/opt/bitnami/mysql
-    plugin_dir=/opt/bitnami/mysql/plugin
-    port=3306
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    datadir=/bitnami/mysql/data
-    tmpdir=/opt/bitnami/mysql/tmp
-    max_allowed_packet=16M
-    bind-address=0.0.0.0
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-    log-error=/opt/bitnami/mysql/logs/mysqld.log
-    character-set-server=UTF8
-    collation-server=utf8_general_ci
-
-    [client]
-    port=3306
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    default-character-set=UTF8
-    plugin_dir=/opt/bitnami/mysql/plugin
-
-    [manager]
-    port=3306
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-
   ## MySQL master containers' resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
@@ -85,7 +17,7 @@ master:
       cpu: 250m
       memory: 1024Mi
     requests:
-      cpu: 125m
+      cpu: 25m
       memory: 512Mi
 
   ## Enable persistence using PVCs on master nodes
@@ -125,36 +57,6 @@ slave:
   ##
   replicas: 1
 
-  ## Configure MySQL slave with a custom my.cnf file
-  ## ref: https://mysql.com/kb/en/mysql/configuring-mysql-with-mycnf/#example-of-configuration-file
-  ##
-  config: |-
-    [mysqld]
-    default_authentication_plugin=mysql_native_password
-    skip-name-resolve
-    explicit_defaults_for_timestamp
-    basedir=/opt/bitnami/mysql
-    port=3306
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    datadir=/bitnami/mysql/data
-    tmpdir=/opt/bitnami/mysql/tmp
-    max_allowed_packet=16M
-    bind-address=0.0.0.0
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-    log-error=/opt/bitnami/mysql/logs/mysqld.log
-    character-set-server=UTF8
-    collation-server=utf8_general_ci
-
-    [client]
-    port=3306
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    default-character-set=UTF8
-
-    [manager]
-    port=3306
-    socket=/opt/bitnami/mysql/tmp/mysql.sock
-    pid-file=/opt/bitnami/mysql/tmp/mysqld.pid
-
   ## MySQL slave containers' resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   ##
@@ -167,7 +69,7 @@ slave:
       cpu: 250m
       memory: 1024Mi
     requests:
-      cpu: 125m
+      cpu: 25m
       memory: 512Mi
 
   ## Enable persistence using PVCs on slave nodes
@@ -199,3 +101,31 @@ slave:
     ## Use an existing PVC
     ##
     # existingClaim:
+
+service:
+  ## MySQL Service type
+  ##
+  type: NodePort
+
+  ## MySQL Service port
+  ##
+  port: 3306
+
+  ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+  ##
+  nodePort:
+    master:
+    slave:
+
+  ## Provide any additional annotations which may be required. This can be used to
+  ## set the LoadBalancer service type to internal only.
+  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+  ##
+  annotations: {}
+  ## loadBalancerIP for the MySQL Service (optional, cloud specific)
+  ## ref: http://kubernetes.io/docs/user-guide/services/#type-loadbalancer
+  ##
+  # loadBalancerIP:
+  #   master:
+  #   slave:

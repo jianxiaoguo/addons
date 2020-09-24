@@ -1,58 +1,63 @@
+## Global Docker image parameters
+## Please, note that this will override the image parameters, including dependencies, configured to use the global value
+## Current available global Docker image parameters: imageRegistry and imagePullSecrets
+##
+global:
+  storageClass: "longhorn"
+
 ## String to fully override redis.fullname template
 ##
 fullnameOverride: hb-redis-custom
 
-## Use password authentication
-usePassword: true
-## Redis password (both master and slave)
-## Defaults to a random 10-character alphanumeric string if not set and usePassword is true
-## ref: https://github.com/bitnami/bitnami-docker-redis#setting-the-server-password-on-first-run
-##
-password: "sunmap"
-## Use existing secret (ignores previous password)
-# existingSecret:
-## Password key to be retrieved from Redis secret
-##
-# existingSecretPasswordKey:
-
-## Persist data to a persistent volume (Redis Master)
-persistence:
+## Cluster settings
+cluster:
   enabled: true
-  ## A manually managed Persistent Volume and Claim
-  ## Requires persistence.enabled: true
-  ## If defined, PVC must be created manually before volume will be bound
-#  existingClaim:
+  slaveCount: 1
 
-##
-## TLS configuration
-##
-tls:
-  # Enable TLS traffic
-  enabled: false
-  #
-  # Whether to require clients to authenticate or not.
-  authClients: true
-  #
-  # Name of the Secret that contains the certificates
-  certificatesSecret:
-  #
-  # Certificate filename
-  certFilename:
-  #
-  # Certificate Key filename
-  certKeyFilename:
-  #
-  # CA Certificate filename
-  certCAFilename:
-  #
-  # File containing DH params (in order to support DH based ciphers)
-  # dhParamsFilename:
+## Use redis sentinel in the redis pod. This will disable the master and slave services and
+## create one redis service with ports to the sentinel and the redis instances
+sentinel:
+  enabled: true
+  ## Require password authentication on the sentinel itself
+  ## ref: https://redis.io/topics/sentinel
+  usePassword: true
+  ## Bitnami Redis Sentintel image version
+  ## ref: https://hub.docker.com/r/bitnami/redis-sentinel/tags/
+  ##
+  ## Redis Sentinel resource requests and limits
+  ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+  # resources:
+  #   requests:
+  #     memory: 256Mi
+  #     cpu: 100m
+  ## Redis Sentinel Service properties
+  service:
+    ##  Redis Sentinel Service type
+    type: NodePort
+    sentinelPort: 26379
+    redisPort: 6379
+
+    ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+    ##
+    # sentinelNodePort:
+    # redisNodePort:
+
+    ## Provide any additional annotations which may be required. This can be used to
+    ## set the LoadBalancer service type to internal only.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+    ##
+    annotations: {}
+    labels: {}
+    loadBalancerIP:
 
 ##
 ## Redis Master parameters
 ##
 master:
   ## Redis command arguments
+  ##
+
   ## Redis Master resource requests and limits
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources:
@@ -66,6 +71,12 @@ master:
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##
   # schedulerName:
+
+  ## Redis Master Service properties
+  service:
+    ##  Redis Master Service type
+    type: NodePort
+    port: 6379
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -100,14 +111,25 @@ master:
 ## The rest of the parameters are either optional or, if undefined, will inherit those declared in Redis Master
 ##
 slave:
-  ## Redis slave Resource
-  resources:
-    requests:
-      memory: 256Mi
-      cpu: 50m
-    limits:
-      memory: 512Mi
-      cpu: 100m
+  ## Slave Service properties
+  service:
+    ## Redis Slave Service type
+    type: NodePort
+    ## Redis port
+    port: 6379
+    ## Specify the nodePort value for the LoadBalancer and NodePort service types.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
+    ##
+    # nodePort:
+
+    ## Provide any additional annotations which may be required. This can be used to
+    ## set the LoadBalancer service type to internal only.
+    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
+    ##
+    annotations: {}
+    labels: {}
+    loadBalancerIP:
+    # loadBalancerSourceRanges: ["10.0.0.0/8"]
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

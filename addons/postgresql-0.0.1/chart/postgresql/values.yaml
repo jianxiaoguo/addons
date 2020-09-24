@@ -569,3 +569,12 @@ metrics:
     timeoutSeconds: 5
     failureThreshold: 6
     successThreshold: 1
+
+## Maximum total connections
+postgresqlMaxConnections: 1000
+
+## Maximum connections for the postgres user
+postgresqlPostgresConnectionLimit: 100
+
+## Maximum connections for the created user
+postgresqlDbUserConnectionLimit: 100

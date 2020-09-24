@@ -1,8 +1,13 @@
 credential:
   - name: HOST
-    value: {{ template "memcached.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+    value: {{ template "memcached.fullname" . }}-{{ .Release.Namespace }}.uae-240.uucin.com
+
   - name: PORT
     valueFrom:
       serviceRef:
         name: {{ template "memcached.fullname" . }}
+        {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
+        jsonpath: '{ .spec.ports[?(@.name=="memcache")].nodePort }'
+        {{- else if eq .Values.service.type "ClusterIP" }}
         jsonpath: '{ .spec.ports[?(@.name=="memcache")].port }'
+        {{- end }}

@@ -133,6 +133,18 @@ spec:
           env:
             - name: BITNAMI_DEBUG
               value: {{ ternary "true" "false" .Values.image.debug | quote }}
+            {{- if .Values.postgresqlMaxConnections }}
+            - name: POSTGRESQL_MAX_CONNECTIONS
+              value: {{ .Values.postgresqlMaxConnections | quote }}
+            {{- end }}
+            {{- if .Values.postgresqlPostgresConnectionLimit }}
+            - name: POSTGRESQL_POSTGRES_CONNECTION_LIMIT
+              value: {{ .Values.postgresqlPostgresConnectionLimit | quote }}
+            {{- end }}
+            {{- if .Values.postgresqlDbUserConnectionLimit }}
+            - name: POSTGRESQL_USERNAME_CONNECTION_LIMIT
+              value: {{ .Values.postgresqlDbUserConnectionLimit | quote }}
+            {{- end }}
             - name: POSTGRESQL_PORT_NUMBER
               value: "{{ template "postgresql.port" . }}"
             - name: POSTGRESQL_VOLUME_DIR
