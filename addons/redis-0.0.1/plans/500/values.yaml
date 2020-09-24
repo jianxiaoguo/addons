@@ -7,7 +7,7 @@ global:
 
 ## String to fully override redis.fullname template
 ##
-fullnameOverride: hb-redis-custom
+fullnameOverride: hb-redis-500
 
 ## Cluster settings
 cluster:
@@ -29,10 +29,10 @@ sentinel:
   resources:
     limits:
       cpu: 100m
-      memory: 512Mi
+      memory: 500Mi
     requests:
-      cpu: 50m
-      memory: 256Mi
+      cpu: 10m
+      memory: 250Mi
 
   ## Redis Sentinel Service properties
   service:
@@ -67,10 +67,10 @@ master:
   resources:
     limits:
       cpu: 100m
-      memory: 512Mi
+      memory: 500Mi
     requests:
-      cpu: 50m
-      memory: 256Mi
+      cpu: 10m
+      memory: 250Mi
   ## Use an alternate scheduler, e.g. "stork".
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##
@@ -138,10 +138,10 @@ slave:
   resources:
     limits:
       cpu: 100m
-      memory: 512Mi
+      memory: 500Mi
     requests:
-      cpu: 50m
-      memory: 256Mi
+      cpu: 10m
+      memory: 250Mi
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/

@@ -7,7 +7,7 @@ global:
 
 ## String to fully override redis.fullname template
 ##
-fullnameOverride: hb-redis-custom
+fullnameOverride: hb-redis-40000
 
 ## Cluster settings
 cluster:
@@ -28,11 +28,11 @@ sentinel:
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources:
     limits:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 2000m
+      memory: 40Gi
     requests:
-      cpu: 50m
-      memory: 256Mi
+      cpu: 200m
+      memory: 20Gi
 
   ## Redis Sentinel Service properties
   service:
@@ -66,11 +66,12 @@ master:
   ## ref: http://kubernetes.io/docs/user-guide/compute-resources/
   resources:
     limits:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 2000m
+      memory: 40Gi
     requests:
-      cpu: 50m
-      memory: 256Mi
+      cpu: 200m
+      memory: 20Gi
+
   ## Use an alternate scheduler, e.g. "stork".
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##
@@ -103,7 +104,7 @@ master:
     storageClass: "longhorn"
     accessModes:
       - ReadWriteOnce
-    size: 1Gi
+    size: 45Gi
     ## Persistent Volume selectors
     ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
     matchLabels: {}
@@ -137,11 +138,11 @@ slave:
 
   resources:
     limits:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 2000m
+      memory: 40Gi
     requests:
-      cpu: 50m
-      memory: 256Mi
+      cpu: 200m
+      memory: 20Gi
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -164,7 +165,7 @@ slave:
     storageClass: "longhorn"
     accessModes:
       - ReadWriteOnce
-    size: 1Gi
+    size: 45Gi
     ## Persistent Volume selectors
     ## https://kubernetes.io/docs/concepts/storage/persistent-volumes/#selector
     matchLabels: {}
