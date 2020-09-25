@@ -55,4 +55,3 @@ data:
       {{- end }}
 
       exec /opt/bitnami/scripts/redis/entrypoint.sh /opt/bitnami/scripts/redis/run.sh
-{{- end }}
