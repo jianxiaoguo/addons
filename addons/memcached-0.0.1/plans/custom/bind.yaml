@@ -1,7 +1,7 @@
 credential:
   - name: HOST
     {{- if (eq .Values.service.type "LoadBalancer") }}
-    jsonpath: '{ .status.loadBalancer.ingress }'
+    jsonpath: '{ .status.loadBalancer.ingress[0].ip }'
     {{- else }}
     value: {{ template "memcached.fullname" . }}-{{ .Release.Namespace }}.uae-241.uucin.com
     {{- end }}
