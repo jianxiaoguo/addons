@@ -1,6 +1,10 @@
 credential:
   - name: HOST
-    value: {{ template "memcached.fullname" . }}-{{ .Release.Namespace }}.uae-240.uucin.com
+    {{- if (eq .Values.service.type "LoadBalancer")) }}
+    jsonpath: '{ .status.loadBalancer.ingress.ip }'
+    {{-else }}
+    value: {{ template "memcached.fullname" . }}-{{ .Release.Namespace }}.uae-241.uucin.com
+    {{}}
 
   - name: PORT
     valueFrom:

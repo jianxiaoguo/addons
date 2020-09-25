@@ -47,7 +47,7 @@ architecture: high-availability
 service:
   ## Service type
   ##
-  type: NodePort
+  type: LoadBalancer
   ## Memcached port
   ##
   port: 11211
@@ -61,4 +61,6 @@ service:
   # loadBalancerIP:
   ## Annotations for the Memcached service
   ##
-  annotations: {}
+  annotations:
+    lb.kubesphere.io/v1alpha1: porter
+    protocol.porter.kubesphere.io/v1alpha1: layer2
