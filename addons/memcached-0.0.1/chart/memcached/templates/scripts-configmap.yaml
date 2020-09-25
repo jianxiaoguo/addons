@@ -7,51 +7,51 @@ metadata:
     app.kubernetes.io/component: memcached
 data:
   {{- $fullname := include "memcached.fullname" . }}
-    {{- $releaseNamespace := .Release.Namespace }}
-    {{- $svcName := .Values.fullnameOverride }}
+  {{- $releaseNamespace := .Release.Namespace }}
+  {{- $svcName := .Values.fullnameOverride }}
+  {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
+  auto-discovery.sh: |-
+    #!/bin/bash
+    SVC_NAME="{{ $svcName }}"
+    # Auxiliar functions
+    retry_while() {
+        local -r cmd="${1:?cmd is missing}"
+        local -r retries="${2:-12}"
+        local -r sleep_time="${3:-5}"
+        local return_value=1
+        read -r -a command <<< "$cmd"
+        for ((i = 1 ; i <= retries ; i+=1 )); do
+            "${command[@]}" && return_value=0 && break
+            sleep "$sleep_time"
+        done
+        return $return_value
+    }
+    k8s_svc_lb_ip() {
+        local namespace=${1:?namespace is missing}
+        local service=${2:?service is missing}
+        local service_ip=$(kubectl get svc "$service" -n "$namespace" -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
+        local service_hostname=$(kubectl get svc "$service" -n "$namespace" -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
+        if [[ -n ${service_ip} ]]; then
+            echo "${service_ip}"
+        else
+            echo "${service_hostname}"
+        fi
+    }
+    k8s_svc_lb_ip_ready() {
+        local namespace=${1:?namespace is missing}
+        local service=${2:?service is missing}
+        [[ -n "$(k8s_svc_lb_ip "$namespace" "$service")" ]]
+    }
+    # Wait until LoadBalancer IP is ready
+    retry_while "k8s_svc_lb_ip_ready {{ $releaseNamespace }} $SVC_NAME" || exit 1
+    # Obtain LoadBalancer external IP
+    k8s_svc_lb_ip "{{ $releaseNamespace }}" "$SVC_NAME" | tee "$SHARED_FILE"
+  {{- end }}
+  setup.sh: |-
+    #!/bin/bash
+
     {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
-    auto-discovery.sh: |-
-      #!/bin/bash
-      SVC_NAME="{{ $svcName }}"
-      # Auxiliar functions
-      retry_while() {
-          local -r cmd="${1:?cmd is missing}"
-          local -r retries="${2:-12}"
-          local -r sleep_time="${3:-5}"
-          local return_value=1
-          read -r -a command <<< "$cmd"
-          for ((i = 1 ; i <= retries ; i+=1 )); do
-              "${command[@]}" && return_value=0 && break
-              sleep "$sleep_time"
-          done
-          return $return_value
-      }
-      k8s_svc_lb_ip() {
-          local namespace=${1:?namespace is missing}
-          local service=${2:?service is missing}
-          local service_ip=$(kubectl get svc "$service" -n "$namespace" -o jsonpath="{.status.loadBalancer.ingress[0].ip}")
-          local service_hostname=$(kubectl get svc "$service" -n "$namespace" -o jsonpath="{.status.loadBalancer.ingress[0].hostname}")
-          if [[ -n ${service_ip} ]]; then
-              echo "${service_ip}"
-          else
-              echo "${service_hostname}"
-          fi
-      }
-      k8s_svc_lb_ip_ready() {
-          local namespace=${1:?namespace is missing}
-          local service=${2:?service is missing}
-          [[ -n "$(k8s_svc_lb_ip "$namespace" "$service")" ]]
-      }
-      # Wait until LoadBalancer IP is ready
-      retry_while "k8s_svc_lb_ip_ready {{ $releaseNamespace }} $SVC_NAME" || exit 1
-      # Obtain LoadBalancer external IP
-      k8s_svc_lb_ip "{{ $releaseNamespace }}" "$SVC_NAME" | tee "$SHARED_FILE"
+    export MEMCACHED_LB_HOSTNAME="$(<${SHARED_FILE})"
     {{- end }}
-    setup.sh: |-
-      #!/bin/bash
 
-      {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
-      export MEMCACHED_LB_HOSTNAME="$(<${SHARED_FILE})"
-      {{- end }}
-
-      exec /opt/bitnami/scripts/redis/entrypoint.sh /opt/bitnami/scripts/redis/run.sh
+    exec /opt/bitnami/scripts/redis/entrypoint.sh /opt/bitnami/scripts/redis/run.sh
