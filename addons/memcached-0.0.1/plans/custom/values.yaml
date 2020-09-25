@@ -58,7 +58,7 @@ service:
   ## Set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
-  loadBalancerIP: 10.1.7.201
+  # loadBalancerIP: 10.1.7.201
   ## Annotations for the Memcached service
   ##
   annotations:
