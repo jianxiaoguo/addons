@@ -39,7 +39,7 @@ persistence:
 
 ## Memcahed architecture. Allowed values: standalone or high-availability
 ##
-architecture: high-availability
+architecture: standalone
 
 ## Service parameters
 ##
