@@ -47,3 +47,12 @@ data:
       # Obtain LoadBalancer external IP
       k8s_svc_lb_ip "{{ $releaseNamespace }}" "$SVC_NAME" | tee "$SHARED_FILE"
     {{- end }}
+    setup.sh: |-
+      #!/bin/bash
+
+      {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
+      export MONGODB_ADVERTISED_HOSTNAME="$(<${SHARED_FILE})"
+      {{- end }}
+
+      exec /opt/bitnami/scripts/redis/entrypoint.sh /opt/bitnami/scripts/redis/run.sh
+  {{- end }}
