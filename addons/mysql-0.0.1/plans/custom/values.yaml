@@ -101,31 +101,3 @@ slave:
     ## Use an existing PVC
     ##
     # existingClaim:
-
-service:
-  ## MySQL Service type
-  ##
-  type: NodePort
-
-  ## MySQL Service port
-  ##
-  port: 3306
-
-  ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-  ##
-  nodePort:
-    master:
-    slave:
-
-  ## Provide any additional annotations which may be required. This can be used to
-  ## set the LoadBalancer service type to internal only.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-  ##
-  annotations: {}
-  ## loadBalancerIP for the MySQL Service (optional, cloud specific)
-  ## ref: http://kubernetes.io/docs/user-guide/services/#type-loadbalancer
-  ##
-  # loadBalancerIP:
-  #   master:
-  #   slave:

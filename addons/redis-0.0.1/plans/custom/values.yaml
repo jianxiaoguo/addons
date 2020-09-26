@@ -34,27 +34,6 @@ sentinel:
       cpu: 50m
       memory: 256Mi
 
-  ## Redis Sentinel Service properties
-  service:
-    ##  Redis Sentinel Service type
-    type: NodePort
-    sentinelPort: 26379
-    redisPort: 6379
-
-    ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-    ##
-    # sentinelNodePort:
-    # redisNodePort:
-
-    ## Provide any additional annotations which may be required. This can be used to
-    ## set the LoadBalancer service type to internal only.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-    ##
-    annotations: {}
-    labels: {}
-    loadBalancerIP:
-
 ##
 ## Redis Master parameters
 ##
@@ -75,12 +54,6 @@ master:
   ## ref: https://kubernetes.io/docs/tasks/administer-cluster/configure-multiple-schedulers/
   ##
   # schedulerName:
-
-  ## Redis Master Service properties
-  service:
-    ##  Redis Master Service type
-    type: NodePort
-    port: 6379
 
   ## Enable persistence using Persistent Volume Claims
   ## ref: http://kubernetes.io/docs/user-guide/persistent-volumes/
@@ -116,24 +89,6 @@ master:
 ##
 slave:
   ## Slave Service properties
-  service:
-    ## Redis Slave Service type
-    type: NodePort
-    ## Redis port
-    port: 6379
-    ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-    ##
-    # nodePort:
-
-    ## Provide any additional annotations which may be required. This can be used to
-    ## set the LoadBalancer service type to internal only.
-    ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-    ##
-    annotations: {}
-    labels: {}
-    loadBalancerIP:
-    # loadBalancerSourceRanges: ["10.0.0.0/8"]
 
   resources:
     limits:

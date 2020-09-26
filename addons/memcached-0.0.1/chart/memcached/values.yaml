@@ -69,7 +69,7 @@ architecture: standalone
 service:
   ## Service type
   ##
-  type: ClusterIP
+  type: LoadBalancer
   ## Memcached port
   ##
   port: 11211
@@ -83,7 +83,9 @@ service:
   # loadBalancerIP:
   ## Annotations for the Memcached service
   ##
-  annotations: {}
+  annotations:
+    lb.kubesphere.io/v1alpha1: porter
+    protocol.porter.kubesphere.io/v1alpha1: layer2
 
 ## Memcached containers' resource requests and limits
 ## ref: http://kubernetes.io/docs/user-guide/compute-resources/

@@ -36,31 +36,3 @@ persistence:
   ## Persistent Volume size
   ##
   size: 512Mi
-
-## Memcahed architecture. Allowed values: standalone or high-availability
-##
-architecture: standalone
-
-## Service parameters
-##
-##
-service:
-  ## Service type
-  ##
-  type: LoadBalancer
-  ## Memcached port
-  ##
-  port: 11211
-  ## Specify the nodePort value for the LoadBalancer and NodePort service types.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#type-nodeport
-  ##
-  nodePort:
-  ## Set the LoadBalancer service type to internal only.
-  ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
-  ##
-  # loadBalancerIP: 10.1.7.201
-  ## Annotations for the Memcached service
-  ##
-  annotations:
-    lb.kubesphere.io/v1alpha1: porter
-    protocol.porter.kubesphere.io/v1alpha1: layer2
