@@ -14,9 +14,9 @@ credential:
   {{- if .Values.slave.replicas }}
   - name: SLAVEHOST
     valueFrom:
-    serviceRef:
-      name: {{ template "mysql.slave.fullname" . }}
-      jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+      serviceRef:
+        name: {{ template "mysql.slave.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: SLAVEPORT
     valueFrom:
