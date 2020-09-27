@@ -2,9 +2,8 @@ credential:
   - name: MASTERHOST
     valueFrom:
       serviceRef:
-        name: {{ template "memcached.fullname" . }}
+        name: {{ template "mysql.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
-
 
   - name: MASTERPORT
     valueFrom:
@@ -33,6 +32,7 @@ credential:
         name: {{ template "mysql.master.fullname" . }}
         key: mysql-password
   {{- end }}
+
   {{- if .Values.db.user }}
   - name: USER
     value: {{ .Values.db.user | quote }}

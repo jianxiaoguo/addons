@@ -27,6 +27,7 @@ credential:
 
   - name: USERNAME
     value: {{ .Values.postgresqlUsername }}
+
   - name: PASSWORD
     valueFrom:
       secretKeyRef:
@@ -37,5 +38,6 @@ credential:
   - name: DATABASE
     value: {{ .Values.postgresqlDatabase }}
   {{- end }}
+
   - name: SSL_MODE
     value: disabled

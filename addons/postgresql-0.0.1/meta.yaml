@@ -7,9 +7,10 @@ displayName: "postgresql"
 tags: database
 labels:
   experimental: "true"
-providerDisplayName: bitnami
+providerDisplayName: postgresql
 longDescription: "PostgreSQL by Helm Broker."
 documentationURL: https://github.com/bitnami/charts/tree/master/bitnami/postgresql
 supportURL: https://bitnami.com/support
 imageURL: https://www.postgresql.org/media/img/about/press/elephant.png
 bindable: true
+bindingsRetrievable: true

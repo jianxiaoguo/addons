@@ -54,10 +54,6 @@ spec:
           env:
             - name: MEMCACHED_USERNAME
               value: {{ default "" .Values.memcachedUsername | quote }}
-            {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
-            - name: SHARED_FILE
-              value: "/shared/info.txt"
-            {{- end }}
             - name: MEMCACHED_PASSWORD
               valueFrom:
                 secretKeyRef:
