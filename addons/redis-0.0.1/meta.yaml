@@ -11,3 +11,5 @@ providerDisplayName: bitnami
 longDescription: "This is redis addon just to show how to expose services using Kyma helm-broker"
 documentationURL: https://github.com/bitnami/bitnami-docker-redis
 supportURL: http://redis.io/
+bindable: true
+bindingsRetrievable: true

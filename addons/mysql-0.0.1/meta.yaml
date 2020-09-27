@@ -12,3 +12,4 @@ longDescription: "MySQL by Helm Broker."
 documentationURL: https://github.com/bitnami/bitnami-docker-mysql
 supportURL: https://bitnami.com/support
 bindable: true
+bindingsRetrievable: true
