@@ -34,7 +34,7 @@ credential:
     valueFrom:
       serviceRef:
         name: {{ template "redis.fullname" . }}-sentinel
-        {{-if .Values.sentinel.service.redisNodePort }}
+        {{- if .Values.sentinel.service.redisNodePort }}
         jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].nodePort }'
         { {- else } }
         jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].port }'
