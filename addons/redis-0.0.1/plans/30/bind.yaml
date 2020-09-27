@@ -23,22 +23,22 @@ credential:
   - name: SENTINELPORT
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}-sentinel
+        name: {{ template "redis.fullname" . }}
         {{- if .Values.master.service.nodePort }}
         jsonpath: '{ .spec.ports[?(@.name=="redis")].nodePort }'
-        { {- else } }
+        {{- else }}
         jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
-        { {- end } }
+        {{- end }}
 
   - name: REDISPORT
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}-sentinel
+        name: {{ template "redis.fullname" . }}
         {{- if .Values.sentinel.service.redisNodePort }}
         jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].nodePort }'
-        { {- else } }
+        {{- else }}
         jsonpath: '{ .spec.ports[?(@.name=="redis-sentinel")].port }'
-        { {- end } }
+        {{- end }}
   {{- end }}
 
   {{- if and .Values.cluster.enabled (not .Values.sentinel.enabled) }}
