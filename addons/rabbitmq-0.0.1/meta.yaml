@@ -12,3 +12,4 @@ longDescription: "This is rabbitmq addon just to show how to expose services usi
 documentationURL: https://github.com/bitnami/bitnami-docker-rabbitmq
 supportURL: https://www.rabbitmq.com
 bindable: true
+bindingsRetrievable: true
