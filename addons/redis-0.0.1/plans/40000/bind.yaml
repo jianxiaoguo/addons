@@ -17,10 +17,10 @@ credential:
   - name: SENTINELHOST
     valueFrom:
       serviceRef:
-        name: {{ template "redis.fullname" . }}-sentinel
+        name: {{ template "redis.fullname" . }}
         jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
-  - name: SENTINELPORT
+  - name: REDISPORT
     valueFrom:
       serviceRef:
         name: {{ template "redis.fullname" . }}
@@ -30,7 +30,7 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
         {{- end }}
 
-  - name: REDISPORT
+  - name: SENTINELPORT
     valueFrom:
       serviceRef:
         name: {{ template "redis.fullname" . }}

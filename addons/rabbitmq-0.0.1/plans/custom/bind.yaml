@@ -1,0 +1,30 @@
+credential:
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ include "rabbitmq.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: AMQPPORT
+    valueFrom:
+      serviceRef:
+        name: {{ include "rabbitmq.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="amqp")].port }'
+
+  {{- if .Values.auth.tls.enabled }}
+  - name: AMQPSSLPORT
+    valueFrom:
+      serviceRef:
+        name: {{{ include "rabbitmq.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="amqp-ssl")].port }'
+  {{- end }}
+
+  {{- if .Values.auth.username }}
+  - name: USERNAME
+    value: {{ .Values.auth.username }}
+  {{- end }}
+
+  {{- if .Values.auth.password }}
+  - name: PASSWORD
+    value: {{ .Values.auth.password }}
+  {{- end }}
