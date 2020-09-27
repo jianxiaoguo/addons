@@ -52,12 +52,12 @@ auth:
   ## RabbitMQ application username
   ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
   ##
-  username: user
+  username: rabbit
 
   ## RabbitMQ application password
   ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
   ##
-  # password:
+  password: rabbit
   # existingPasswordSecret: name-of-existing-secret
 
   ## Erlang cookie to determine whether different nodes are allowed to communicate with each other
@@ -186,7 +186,7 @@ extraContainerPorts: []
 configuration: |-
   ## Username and password
   default_user = {{ .Values.auth.username }}
-  default_pass = CHANGEME
+  default_pass = {{ .Values.auth.password }}
   ## Clustering
   cluster_formation.peer_discovery_backend  = rabbit_peer_discovery_k8s
   cluster_formation.k8s.host = kubernetes.default.svc.{{ .Values.clusterDomain }}
@@ -526,7 +526,7 @@ networkPolicy:
 
 ## Kubernetes service type
 service:
-  type: ClusterIP
+  type: LoadBalancer
   ## Amqp port
   ## ref: https://github.com/bitnami/bitnami-docker-rabbitmq#environment-variables
   ##
@@ -607,7 +607,9 @@ service:
   ## annotations:
   ##   service.beta.kubernetes.io/aws-load-balancer-internal: 0.0.0.0/0
   ##
-  annotations: {}
+  annotations:
+    lb.kubesphere.io/v1alpha1: porter
+    protocol.porter.kubesphere.io/v1alpha1: layer2
 
 ## Configure the ingress resource that allows you to access the
 ## RabbitMQ installation. Set up the URL

@@ -38,6 +38,3 @@ credential:
   - name: DATABASE
     value: {{ .Values.postgresqlDatabase }}
   {{- end }}
-
-  - name: SSL_MODE
-    value: disabled

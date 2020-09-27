@@ -749,6 +749,7 @@ configmap: |-
   appendonly yes
   # Disable RDB persistence, AOF persistence already enabled.
   save ""
+
 ## Sysctl InitContainer
 ## used to perform sysctl operation to modify Kernel settings (needed sometimes to avoid warnings)
 sysctlImage:

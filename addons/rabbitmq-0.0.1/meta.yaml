@@ -7,7 +7,8 @@ displayName: "rabbitmq"
 tags: mq
 labels:
   experimental: "true"
-providerDisplayName: rabbitmq
+providerDisplayName: bitnami
 longDescription: "This is rabbitmq addon just to show how to expose services using Kyma helm-broker"
 documentationURL: https://github.com/bitnami/bitnami-docker-rabbitmq
 supportURL: https://www.rabbitmq.com
+bindable: true

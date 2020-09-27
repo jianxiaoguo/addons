@@ -11,16 +11,16 @@ resources:
   # resources, such as Minikube. If you do want to specify resources, uncomment the following
   # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
   limits:
-    cpu: 1000m
-    memory: 2Gi
-  requests:
-    cpu: 200m
+    cpu: 2000m
     memory: 1Gi
+  requests:
+    cpu: 20m
+    memory: 256Gi
 
 persistence:
   ## this enables PVC templates that will create one per pod
   ##
-  enabled: false
+  enabled: true
 
   ## rabbitmq data Persistent Volume Storage Class
   ## If defined, storageClassName: <storageClass>
@@ -29,7 +29,7 @@ persistence:
   ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
   ##   GKE, AWS & OpenStack)
   ##
-  # storageClass: "-"
+  storageClass: "longhorn"
   ## selector can be used to match an existing PersistentVolume
   ## selector:
   ##   matchLabels:
@@ -44,41 +44,4 @@ persistence:
 
   ## If you change this value, you might have to adjust `rabbitmq.diskFreeLimit` as well.
   ##
-  size: 8Gi
-
-## Configure the ingress resource that allows you to access the
-## RabbitMQ installation. Set up the URL
-## ref: http://kubernetes.io/docs/user-guide/ingress/
-##
-ingress:
-  ## Set to true to enable ingress record generation
-  ##
-  enabled: false
-
-  ## Path for the default host
-  ##
-  path: /
-
-  ## Set this to true in order to add the corresponding annotations for cert-manager
-  ##
-  certManager: false
-
-  ## When the ingress is enabled, a host pointing to this will be created
-  ##
-  hostname: rabbitmq.local
-
-  ## Ingress annotations done as key:value pairs
-  ## For a full list of possible ingress annotations, please see
-  ## ref: https://github.com/kubernetes/ingress-nginx/blob/master/docs/user-guide/nginx-configuration/annotations.md
-  ##
-  ## If certManager is set to true, annotation kubernetes.io/tls-acme: "true" will automatically be set
-  ##
-  annotations: {}
-
-  ## Enable TLS configuration for the hostname defined at ingress.hostname parameter
-  ## TLS certificates will be retrieved from a TLS secret with name: {{- printf "%s-tls" .Values.ingress.hostname }}
-  ## or a custom one if you use the tls.existingSecret parameter
-  ## You can use the ingress.secrets parameter to create this TLS secret or relay on cert-manager to create it
-  ##
-  tls: false
-  ## existingSecret: name-of-existing-secret
+  size: 1Gi
