@@ -1,10 +1,9 @@
 credential:
   - name: HOST
-    {{- if (eq .Values.service.type "LoadBalancer") }}
-    jsonpath: '{ .status.loadBalancer.ingress[0].ip }'
-    {{- else }}
-    value: {{ template "memcached.fullname" . }}-{{ .Release.Namespace }}.uae-241.uucin.com
-    {{- end }}
+    valueFrom:
+      serviceRef:
+        name: {{ template "memcached.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: PORT
     valueFrom:
@@ -12,7 +11,7 @@ credential:
         name: {{ template "memcached.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="memcache")].port }'
 
-  {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
+  {{- if (eq .Values.service.type "LoadBalancer") }}
   - name: NODEPORT
     valueFrom:
       serviceRef:

@@ -47,7 +47,7 @@ cluster:
 ## Use redis sentinel in the redis pod. This will disable the master and slave services and
 ## create one redis service with ports to the sentinel and the redis instances
 sentinel:
-  enabled: false
+  enabled: true
   ## Require password authentication on the sentinel itself
   ## ref: https://redis.io/topics/sentinel
   usePassword: true
@@ -116,7 +116,7 @@ sentinel:
   ## Redis Sentinel Service properties
   service:
     ##  Redis Sentinel Service type
-    type: ClusterIP
+    type: LoadBalancer
     sentinelPort: 26379
     redisPort: 6379
 
@@ -130,7 +130,9 @@ sentinel:
     ## set the LoadBalancer service type to internal only.
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
-    annotations: {}
+  annotations:
+    lb.kubesphere.io/v1alpha1: porter
+    protocol.porter.kubesphere.io/v1alpha1: layer2
     labels: {}
     loadBalancerIP:
 
@@ -355,7 +357,7 @@ master:
   ## Redis Master Service properties
   service:
     ##  Redis Master Service type
-    type: ClusterIP
+    type: LoadBalancer
     port: 6379
 
     ## Specify the nodePort value for the LoadBalancer and NodePort service types.
@@ -367,7 +369,9 @@ master:
     ## set the LoadBalancer service type to internal only.
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
-    annotations: {}
+  annotations:
+    lb.kubesphere.io/v1alpha1: porter
+    protocol.porter.kubesphere.io/v1alpha1: layer2
     labels: {}
     loadBalancerIP:
     # loadBalancerSourceRanges: ["10.0.0.0/8"]
@@ -440,7 +444,7 @@ slave:
   ## Slave Service properties
   service:
     ## Redis Slave Service type
-    type: ClusterIP
+    type: LoadBalancer
     ## Redis port
     port: 6379
     ## Specify the nodePort value for the LoadBalancer and NodePort service types.
@@ -452,7 +456,9 @@ slave:
     ## set the LoadBalancer service type to internal only.
     ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
     ##
-    annotations: {}
+    annotations:
+      lb.kubesphere.io/v1alpha1: porter
+      protocol.porter.kubesphere.io/v1alpha1: layer2
     labels: {}
     loadBalancerIP:
     # loadBalancerSourceRanges: ["10.0.0.0/8"]
@@ -743,7 +749,6 @@ configmap: |-
   appendonly yes
   # Disable RDB persistence, AOF persistence already enabled.
   save ""
-
 ## Sysctl InitContainer
 ## used to perform sysctl operation to modify Kernel settings (needed sometimes to avoid warnings)
 sysctlImage:

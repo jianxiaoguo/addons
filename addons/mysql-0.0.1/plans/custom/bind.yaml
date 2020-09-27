@@ -1,6 +1,10 @@
 credential:
   - name: MASTERHOST
-    value: {{ template "mysql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+    valueFrom:
+      serviceRef:
+        name: {{ template "memcached.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
 
   - name: MASTERPORT
     valueFrom:
@@ -10,7 +14,10 @@ credential:
 
   {{- if .Values.slave.replicas }}
   - name: SLAVEHOST
-    value: {{ template "mysql.slave.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+    valueFrom:
+    serviceRef:
+      name: {{ template "mysql.slave.fullname" . }}
+      jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: SLAVEPORT
     valueFrom:

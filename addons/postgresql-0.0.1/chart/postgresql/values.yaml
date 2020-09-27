@@ -248,7 +248,7 @@ ldap:
 ## PostgreSQL service configuration
 service:
   ## PosgresSQL service type
-  type: ClusterIP
+  type: LoadBalancer
   # clusterIP: None
   port: 5432
 
@@ -259,7 +259,9 @@ service:
 
   ## Provide any additional annotations which may be required. Evaluated as a template.
   ##
-  annotations: {}
+  annotations:
+    lb.kubesphere.io/v1alpha1: porter
+    protocol.porter.kubesphere.io/v1alpha1: layer2
   ## Set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##

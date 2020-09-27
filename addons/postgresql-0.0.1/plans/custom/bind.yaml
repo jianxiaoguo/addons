@@ -1,6 +1,10 @@
 credential:
   - name: HOST
-    value: {{ template "postgresql.fullname" .}}.{{ .Release.Namespace }}.svc.cluster.local
+    valueFrom:
+      serviceRef:
+        name: {{ template "postgresql.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
   - name: PORT
     valueFrom:
       serviceRef:
@@ -9,12 +13,16 @@ credential:
 
   {{- if .Values.replication.enabled }}
   - name: READHOST
-    value: {{ template "postgresql.fullname" . }}-read.{{ .Release.Namespace }}.svc.cluster.local
+    valueFrom:
+      serviceRef:
+        name: {{ template "postgresql.fullname" . }}-read
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
   - name: READPORT
-  valueFrom:
-    serviceRef:
-      name: {{ template "postgresql.fullname" . }}-read
-      jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
+    valueFrom:
+      serviceRef:
+        name: {{ template "postgresql.fullname" . }}-read
+        jsonpath: '{ .spec.ports[?(@.name=="tcp-postgresql")].port }'
   {{- end }}
 
   - name: USERNAME

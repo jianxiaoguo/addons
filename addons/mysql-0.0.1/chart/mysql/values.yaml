@@ -488,7 +488,7 @@ slave:
 service:
   ## MySQL Service type
   ##
-  type: ClusterIP
+  type: LoadBalancer
 
   ## MySQL Service port
   ##
@@ -505,7 +505,10 @@ service:
   ## set the LoadBalancer service type to internal only.
   ## ref: https://kubernetes.io/docs/concepts/services-networking/service/#internal-load-balancer
   ##
-  annotations: {}
+  annotations:
+    lb.kubesphere.io/v1alpha1: porter
+    protocol.porter.kubesphere.io/v1alpha1: layer2
+
   ## loadBalancerIP for the MySQL Service (optional, cloud specific)
   ## ref: http://kubernetes.io/docs/user-guide/services/#type-loadbalancer
   ##

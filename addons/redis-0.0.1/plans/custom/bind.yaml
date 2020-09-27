@@ -1,7 +1,10 @@
 credential:
   {{- if not .Values.sentinel.enabled }}
   - name: MASTERHOST
-    value: {{ template "redis.fullname" . }}-master.{{ .Release.Namespace }}.svc.cluster.local
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-master
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: MASTERPORT
     valueFrom:
@@ -12,7 +15,10 @@ credential:
 
   {{- if .Values.sentinel.enabled }}
   - name: SENTINELHOST
-    value: {{ template "redis.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-sentinel
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: SENTINELPORT
     valueFrom:
@@ -37,7 +43,10 @@ credential:
 
   {{- if and .Values.cluster.enabled (not .Values.sentinel.enabled) }}
   - name: SLAVEHOST
-    value: {{ template "redis.fullname" . }}-slave.{{ .Release.Namespace }}.svc.cluster.local
+    valueFrom:
+      serviceRef:
+        name: {{ template "redis.fullname" . }}-slave
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
 
   - name: SLAVEPORT
     valueFrom:
@@ -46,10 +55,10 @@ credential:
         jsonpath: '{ .spec.ports[?(@.name=="redis")].port }'
   {{- end }}
 
-{{- if .Values.usePassword }}
+  {{- if .Values.usePassword }}
   - name: REDIS_PASSWORD
     valueFrom:
       secretKeyRef:
         name: {{ template "redis.fullname" . }}
         key: redis-password
-{{- end }}
+  {{- end }}
