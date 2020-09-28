@@ -15,7 +15,7 @@ credential:
     valueFrom:
       secretKeyRef:
         name: {{ template "mysql.fullname" . }}
-        key: '{ .data.mysql-root-password }'
+        key: mysql-root-password
 
   {{- if .Values.mysqlUser }}
   - name: USER
@@ -26,4 +26,4 @@ credential:
     valueFrom:
       secretKeyRef:
         name: {{ template "mysql.fullname" . }}
-        key: '{ .data.mysql-password }'
+        key: mysql-password
