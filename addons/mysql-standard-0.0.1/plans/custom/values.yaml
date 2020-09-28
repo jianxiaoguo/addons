@@ -1,4 +1,4 @@
-fullnameOverride： hb-mysql-custom
+fullnameOverride: hb-mysql-standard-custom
 ## Number of containers to run
 replicaCount: 1
 ## Persist data to a persistent volume
