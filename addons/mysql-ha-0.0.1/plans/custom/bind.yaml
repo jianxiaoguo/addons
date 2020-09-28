@@ -21,7 +21,7 @@ credential:
     valueFrom:
       serviceRef:
         name: {{ template "fullname" . }}-readonly
-        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+        jsonpath: '{ .spec.ports[?(@.name=="mysql-readonly")].port }'
 
   - name: MYSQLROOTPASSWORD
     valueFrom:

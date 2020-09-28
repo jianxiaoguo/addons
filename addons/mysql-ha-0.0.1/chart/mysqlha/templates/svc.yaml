@@ -20,10 +20,10 @@ spec:
   {{- end }}
   {{- end }}
   ports:
-  - name: {{ template "fullname" . }}
+  - name: mysql
     port: 3306
     {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
-    nodePort: {{ .Values.service.nodePort.master }}
+    nodePort: {{ .Values.service.nodePort }}
     {{- else if eq .Values.service.type "ClusterIP" }}
     nodePort: null
     {{- end }}
@@ -56,10 +56,10 @@ spec:
   {{- end }}
   {{- end }}
   ports:
-  - name: {{ template "fullname" . }}
+  - name: mysql-readonly
     port: 3306
     {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
-    nodePort: {{ .Values.service.nodePort.master }}
+    nodePort: {{ .Values.service.nodePort }}
     {{- else if eq .Values.service.type "ClusterIP" }}
     nodePort: null
     {{- end }}
