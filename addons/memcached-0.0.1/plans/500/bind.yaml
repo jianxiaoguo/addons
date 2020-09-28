@@ -10,11 +10,3 @@ credential:
       serviceRef:
         name: {{ template "memcached.fullname" . }}
         jsonpath: '{ .spec.ports[?(@.name=="memcache")].port }'
-
-  {{- if (eq .Values.service.type "LoadBalancer") }}
-  - name: NODEPORT
-    valueFrom:
-      serviceRef:
-        name: {{ template "memcached.fullname" . }}
-        jsonpath: '{ .spec.ports[?(@.name=="memcache")].nodePort }'
-  {{- end }}
