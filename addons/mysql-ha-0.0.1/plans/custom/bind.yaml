@@ -1,0 +1,47 @@
+credential:
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+
+  - name: READHOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "fullname" . }}-readonly
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: READPORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "fullname" . }}-readonly
+        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+
+  - name: MYSQLROOTPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "fullname" . }}
+        key: mysql-root-password
+
+  - name: MYSQLREPLICATIONROOTPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "fullname" . }}
+        key: mysql-replication-password
+
+  {{- if .Values.mysqlUser }}
+  - name: USER
+    value: {{ default "" .Values.mysqlUser | quote }}
+  {{- end }}
+
+  - name: MYSQLPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "fullname" . }}
+        key: mysql-password

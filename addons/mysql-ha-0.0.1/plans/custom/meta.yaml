@@ -1,0 +1,5 @@
+name: custom
+id: 43bfa63c-2eda-4bb0-85de-35a3447d45a9
+description: "mysql-ha custom plan which limit resources pvc size 1Gi."
+displayName: custom
+bindable: true

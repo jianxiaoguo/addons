@@ -1,0 +1,15 @@
+name: mysqlha
+version: 0.0.1
+id: d1bd6df7-05f0-47c6-93a8-4eddfbd2817b
+description: "MySQL-ha by Helm Broker."
+displayName: "mysql-ha"
+
+tags: database
+labels:
+  experimental: "true"
+providerDisplayName: helm
+longDescription: "MySQL by Helm Broker."
+documentationURL: https://hub.docker.com/_/mysql/
+supportURL: https://hub.docker.com/_/mysql/
+bindable: true
+bindingsRetrievable: true

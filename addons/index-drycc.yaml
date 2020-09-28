@@ -5,7 +5,15 @@ entries:
       description: "Memcached is an in-memory key-value store for small chunks of arbitrary data (strings, objects) from results of database calls, API calls, or page rendering."
       version: 0.0.1
   mysql:
-    - name: redis
+    - name: mysql
+      description: "MySQL is a fast, reliable, scalable, and easy to use open-source relational database system."
+      version: 0.0.1
+  mysql-ha:
+    - name: mysql-ha
+      description: "MySQL is a fast, reliable, scalable, and easy to use open-source relational database system."
+      version: 0.0.1
+  mysql-standard:
+    - name: mysql-standard
       description: "MySQL is a fast, reliable, scalable, and easy to use open-source relational database system."
       version: 0.0.1
   postgresql:

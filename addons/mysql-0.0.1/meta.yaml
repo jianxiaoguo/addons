@@ -7,9 +7,9 @@ displayName: "mysql"
 tags: database
 labels:
   experimental: "true"
-providerDisplayName: helm
+providerDisplayName: bitnami
 longDescription: "MySQL by Helm Broker."
-documentationURL: https://hub.docker.com/_/mysql/
-supportURL: https://hub.docker.com/_/mysql/
+documentationURL: https://github.com/bitnami/bitnami-docker-mysql
+supportURL: https://bitnami.com/support
 bindable: true
 bindingsRetrievable: true

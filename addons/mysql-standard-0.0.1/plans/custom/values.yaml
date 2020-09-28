@@ -1,0 +1,28 @@
+fullnameOverride： hb-mysql-custom
+## Number of containers to run
+replicaCount: 1
+## Persist data to a persistent volume
+persistence:
+  enabled: true
+  ## database data Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  storageClass: "longhorn"
+  accessMode: ReadWriteOnce
+  size: 1Gi
+  annotations: {}
+
+## Configure resource requests and limits
+## ref: http://kubernetes.io/docs/user-guide/compute-resources/
+##
+resources:
+  limits:
+    cpu: 250m
+    memory: 1024Mi
+  requests:
+    cpu: 25m
+    memory: 512Mi

@@ -1,5 +1,0 @@
-name: custom
-id: 6319b95b-f3f5-4e72-9082-437fc173e67c
-description: "mysql custom plan which uses the temp persistence."
-displayName: custom
-bindable: true

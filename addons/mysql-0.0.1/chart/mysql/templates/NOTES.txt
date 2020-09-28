@@ -1,48 +1,62 @@
-MySQL can be accessed via port 3306 on the following DNS name from within your cluster:
-{{ template "mysql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
 
-{{- if .Values.mysqlx.port.enabled }}
-Connection to the X protocol of MySQL can be done via 33060 on the following DNS name from within your cluster:
-{{ template "mysql.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local
+Please be patient while the chart is being deployed
+
+Tip:
+
+  Watch the deployment status using the command: kubectl get pods -w --namespace {{ .Release.Namespace }}
+
+Services:
+
+  echo Master: {{ template "mysql.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.port }}
+{{- if .Values.replication.enabled }}
+  echo Slave:  {{ template "mysql.slave.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }}:{{ .Values.service.port }}
 {{- end }}
 
-{{- if .Values.existingSecret }}
-If you have not already created the mysql password secret:
+Administrator credentials:
 
-   kubectl create secret generic {{ .Values.existingSecret }} --namespace {{ .Release.Namespace }} --from-file=./mysql-root-password --from-file=./mysql-password
-{{ else }}
-
-To get your root password run:
-
-    MYSQL_ROOT_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "mysql.fullname" . }} -o jsonpath="{.data.mysql-root-password}" | base64 --decode; echo)
-{{- end }}
+  echo Username: root
+  echo Password : $(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "mysql.fullname" . }} -o jsonpath="{.data.mysql-root-password}" | base64 --decode)
 
 To connect to your database:
 
-1. Run an Ubuntu pod that you can use as a client:
+  1. Run a pod that you can use as a client:
 
-    kubectl run -i --tty ubuntu --image=ubuntu:16.04 --restart=Never -- bash -il
+      kubectl run {{ template "mysql.fullname" . }}-client --rm --tty -i --restart='Never' --image  {{ template "mysql.image" . }} --namespace {{ .Release.Namespace }} --command -- bash
 
-2. Install the mysql client:
+  2. To connect to master service (read/write):
 
-    $ apt-get update && apt-get install mysql-client -y
+      mysql -h {{ template "mysql.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }} -uroot -p {{ .Values.db.name }}
 
-3. Connect using the mysql cli, then provide your password:
-    $ mysql -h {{ template "mysql.fullname" . }} -p
+{{- if .Values.replication.enabled }}
 
-To connect to your database directly from outside the K8s cluster:
-    {{- if contains "NodePort" .Values.service.type }}
-    MYSQL_HOST=$(kubectl get nodes --namespace {{ .Release.Namespace }} -o jsonpath='{.items[0].status.addresses[0].address}')
-    MYSQL_PORT=$(kubectl get svc --namespace {{ .Release.Namespace }} {{ template "mysql.fullname" . }} -o jsonpath='{.spec.ports[0].nodePort}')
+  3. To connect to slave service (read-only):
 
-    {{- else if contains "ClusterIP" .Values.service.type }}
-    MYSQL_HOST=127.0.0.1
-    MYSQL_PORT={{ .Values.service.port }}
+      mysql -h {{ template "mysql.slave.fullname" . }}.{{ .Release.Namespace }}.svc.{{ .Values.clusterDomain }} -uroot -p {{ .Values.db.name }}
 
-    # Execute the following command to route the connection:
-    kubectl port-forward svc/{{ template "mysql.fullname" . }} {{ .Values.service.port }}
+{{- end }}
+{{- if .Values.metrics.enabled }}
 
-    {{- end }}
+To access the MySQL Prometheus metrics from outside the cluster execute the following commands:
 
-    mysql -h ${MYSQL_HOST} -P${MYSQL_PORT} -u root -p${MYSQL_ROOT_PASSWORD}
-    
+    kubectl port-forward --namespace {{ .Release.Namespace }} svc/{{ template "mysql.fullname" . }} {{ .Values.metrics.service.port }}:{{ .Values.metrics.service.port }} &
+    curl 127.0.0.1:{{ .Values.metrics.service.port }}/metrics
+
+{{- end }}
+
+To upgrade this helm chart:
+
+  1. Obtain the password as described on the 'Administrator credentials' section and set the 'root.password' parameter as shown below:
+
+      ROOT_PASSWORD=$(kubectl get secret --namespace {{ .Release.Namespace }} {{ template "mysql.fullname" . }} -o jsonpath="{.data.mysql-root-password}" | base64 --decode)
+      helm upgrade {{ .Release.Name }} bitnami/mysql --set root.password=$ROOT_PASSWORD
+
+{{- if and (contains "bitnami/" .Values.image.repository) (not (.Values.image.tag | toString | regexFind "-r\\d+$|sha256:")) }}
+
+WARNING: Rolling tag detected ({{ .Values.image.repository }}:{{ .Values.image.tag }}), please note that it is strongly recommended to avoid using rolling tags in a production environment.
++info https://docs.bitnami.com/containers/how-to/understand-rolling-tags-containers/
+
+{{- end }}
+
+
+{{ include "mysql.validateValues" . }}
+{{ include "mysql.checkRollingTags" . }}

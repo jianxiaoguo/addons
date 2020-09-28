@@ -1,0 +1,72 @@
+# Headless service for stable DNS entries of StatefulSet members.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}
+  annotations:
+  {{- if .Values.service.annotations }}
+  {{- include "mysql.tplValue" ( dict "value" .Values.service.annotations "context" $) | nindent 4 }}
+  {{- end }}
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ template "mysqlha.chart" . }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+spec:
+  type: {{ .Values.service.type }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (not (empty .Values.service.loadBalancerIP)) }}
+  {{- if not (empty .Values.service.loadBalancerIP) }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
+  {{- end }}
+  ports:
+  - name: {{ template "fullname" . }}
+    port: 3306
+    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
+    nodePort: {{ .Values.service.nodePort.master }}
+    {{- else if eq .Values.service.type "ClusterIP" }}
+    nodePort: null
+    {{- end }}
+  selector:
+    app: {{ template "fullname" . }}
+---
+# Client service for connecting to any MySQL instance for reads.
+# For writes, you must instead connect to the master: mysql-0.mysql.
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ template "fullname" . }}-readonly
+  labels:
+    app: {{ template "fullname" . }}
+    chart: "{{ template "mysqlha.chart" . }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  annotations:
+  {{- if .Values.service.annotations }}
+  {{- include "mysql.tplValue" ( dict "value" .Values.service.annotations "context" $) | nindent 4 }}
+  {{- end }}
+{{- if and (.Values.metrics.enabled) (.Values.metrics.annotations) }}
+{{ toYaml .Values.metrics.annotations | indent 4 }}
+{{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  {{- if and (eq .Values.service.type "LoadBalancer") (not (empty .Values.service.loadBalancerIP)) }}
+  {{- if not (empty .Values.service.loadBalancerIP) }}
+  loadBalancerIP: {{ .Values.service.loadBalancerIP }}
+  {{- end }}
+  {{- end }}
+  ports:
+  - name: {{ template "fullname" . }}
+    port: 3306
+    {{- if and (or (eq .Values.service.type "NodePort") (eq .Values.service.type "LoadBalancer")) (not (empty .Values.service.nodePort)) }}
+    nodePort: {{ .Values.service.nodePort.master }}
+    {{- else if eq .Values.service.type "ClusterIP" }}
+    nodePort: null
+    {{- end }}
+  {{- if .Values.metrics.enabled }}
+  - name: metrics
+    port: 9104
+    targetPort: metrics
+  {{- end }}
+  selector:
+    app: {{ template "fullname" . }}

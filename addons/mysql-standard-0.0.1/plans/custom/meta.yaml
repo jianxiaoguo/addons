@@ -1,5 +1,5 @@
 name: custom
-id: 6319b95b-f3f5-4e72-9082-437fc173e67c
+id: 2838bd23-9d19-4faa-9e10-ae465b000c75
 description: "mysql custom plan which limit resources pvc size 1Gi."
 displayName: custom
 bindable: true

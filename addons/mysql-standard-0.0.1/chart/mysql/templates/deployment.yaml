@@ -20,6 +20,7 @@ spec:
     matchLabels:
       app: {{ template "mysql.fullname" . }}
       release: {{ .Release.Name }}
+  replicas: {{ .Values.replicaCount }}
   template:
     metadata:
       labels:

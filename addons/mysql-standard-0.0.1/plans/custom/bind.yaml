@@ -1,0 +1,29 @@
+credential:
+  - name: HOST
+    valueFrom:
+      serviceRef:
+        name: {{ template "mysql.fullname" . }}
+        jsonpath: '{ .status.loadBalancer.ingress[*].ip }'
+
+  - name: PORT
+    valueFrom:
+      serviceRef:
+        name: {{ template "mysql.fullname" . }}
+        jsonpath: '{ .spec.ports[?(@.name=="mysql")].port }'
+
+  - name: MYSQLROOTPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "mysql.fullname" . }}
+        key: mysql-root-password
+
+  {{- if .Values.mysqlUser }}
+  - name: USER
+    value: {{ default "" .Values.mysqlUser | quote }}
+  {{- end }}
+
+  - name: MYSQLPASSWORD
+    valueFrom:
+      secretKeyRef:
+        name: {{ template "mysql.fullname" . }}
+        key: mysql-password
