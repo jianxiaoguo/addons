@@ -1,4 +1,4 @@
-name: mysql
+name: mysql-standard
 version: 0.0.1
 id: 632eb401-434c-436d-8525-3202ce9df329
 description: "MySQL by Helm Broker."

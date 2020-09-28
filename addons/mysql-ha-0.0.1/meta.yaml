@@ -1,4 +1,4 @@
-name: mysqlha
+name: mysql-ha
 version: 0.0.1
 id: d1bd6df7-05f0-47c6-93a8-4eddfbd2817b
 description: "MySQL-ha by Helm Broker."
