@@ -51,7 +51,7 @@ clusterDomain: cluster.local
 
 ## Memcahed architecture. Allowed values: standalone or high-availability
 ##
-architecture: standalone
+architecture: high-availability
 
 ## Memcached admin user
 ## ref: https://github.com/bitnami/bitnami-docker-memcached#creating-the-memcached-admin-user
